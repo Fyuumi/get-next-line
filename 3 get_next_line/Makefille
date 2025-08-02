@@ -1,0 +1,42 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefille                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/07/23 16:50:26 by opaulman          #+#    #+#              #
+#    Updated: 2025/07/23 18:10:39 by opaulman         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
+NAME = get_next_line.a
+
+SRC = 	get_next_line.c get_next_line_utils.c 
+
+BONUS = 
+
+OBJ =	$(SRC:.c=.o)
+CC =	cc
+CFLAGS =	-Wall -Wextra -Werror
+
+
+all:	$(NAME)
+
+$(NAME):	$(OBJ)
+	ar rcs $@ $^
+
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:	
+	rm -f $(OBJ)
+fclean:	
+	rm -f $(NAME) $(OBJ)
+re:     	
+	$(MAKE) fclean
+	$(MAKE) all			
+
+.PHONY: all clean fclean re
