@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:51:53 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/02 14:28:27 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:40:45 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;
@@ -53,26 +55,20 @@ char	*ft_strjoin_trim(char *s1, char const *s2, int i)
 	int		ls;
 	int		li;
 
-	if (s1[0] == '\0')
-		ls = 0;
-	else
-		ls = ft_strlen(s1);
+	ls = ft_strlen(s1);
 	li = ft_strlen(s2);
-	if (i != 0)
+	if (i > 0)
 		li = i;
-	string = NULL;
+	if (i == -1)
+		li += 1;
 	string = (char *)ft_calloc(ls + li + 1, sizeof(char));
 	if (!string)
 		return (0);
-	if (ls != 0)
+	if (ls > 0)
 		ft_strlcpy(string, s1, ls + 1);
-	if (!string)
-		return (0);
-	li = ls + li;
-	ft_strlcat(string, s2, li);
-	if (!string)
-		return (0);
-	free(s1);
+	if (li > 0)
+		ft_strlcat(string, s2, ls + li);
+	string[ls + li] = '\0';
 	return (string);
 }
 
@@ -106,10 +102,8 @@ char	*ft_strdup(const char *s)
 
 	len_s = ft_strlen(s) + 1;
 	string = malloc(len_s * sizeof(char));
-	if (string == 0)
-	{
+	if (!string)
 		return (NULL);
-	}
 	ft_strlcpy(string, s, len_s);
 	return (string);
 }

@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:53:32 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/02 16:18:55 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:47:53 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,19 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 10
 # endif
 
 typedef struct y
 {
-	char *buffer;
+	char *buff;
+	char *temp;
+	char *fullstring;
 	int i;
 	int bytesread;
+	char *lastbuffer;
 
-}		tgnl_c;
+}		t_gnl_c;
 
 char	*get_next_line(int fd);
 char	*ft_strjoin_trim(char *s1, char const *s2, int i);
@@ -38,10 +41,9 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
-char	*ft_strdup(const char *s);
-char	*buff_to_savebuff(char *savedbuffer, char **lastbuffer, int fd, int *i);
+char	*read_add(char *rem, char **lastbuffer, int fd, char *fulls);
 char	*return_free(char *s);
-void	*ft_calloc(size_t nmemb, size_t size);
-void	*ft_memset(void *s, int c, size_t n);
+char	*buffjoin(char *buff_fullstring, char *buffer, int i, char *rem);
 int		my_strn(char *s);
+void	*ft_calloc(size_t nmemb, size_t size);
 #endif

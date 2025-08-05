@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:51:38 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/02 16:24:20 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:36:43 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,28 @@
 
 char	*get_next_line(int fd)
 {
-	tgnl_c		y;
-	static char	*remainders;
-	char		*savedbuffer;
-	char		*lastbuffer;
+	t_gnl_c		y;
+	static char	*rem;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
-	{
-		if (remainders)
-			free(remainders);
-		return (remainders = NULL);
-	}
-	if (!remainders)
-	{
-		remainders = ft_strdup("");
-		if (!remainders)
-			return (NULL);
-	}
-	if (my_strn(remainders) != 0) // if nextline in remainder
-	{
-		y.i = my_strn(remainders);
-		savedbuffer = ft_strjoin_trim(remainders, "", y.i);
-		remainders = ft_strdup(remainders + y.i);
-		return (savedbuffer);
-	}
-	savedbuffer = buff_to_savebuff(remainders, &lastbuffer, fd, &y.bytesread);
-	if (savedbuffer == NULL)
 		return (NULL);
-	remainders = NULL;
-	free(remainders);
-	if (lastbuffer != NULL)
-		remainders = ft_strdup(lastbuffer);
-	if (savedbuffer == NULL)
-		return (free(lastbuffer), NULL);
-	return (free(lastbuffer), savedbuffer);
+	if (my_strn(rem) != 0)
+	{
+		y.i = my_strn(rem);
+		y.fullstring = ft_strjoin_trim("", rem, y.i);
+		y.buff = ft_strjoin_trim(rem + y.i, "", 0);
+		free(rem);
+		rem = ft_strjoin_trim(y.buff, "", 0);
+		return (free(y.buff), y.fullstring);
+	}
+	y.fullstring = read_add(rem, &y.lastbuffer, fd, "0");
+	if (y.fullstring == NULL)
+		return (NULL);
+	free(rem);
+	rem = NULL;
+	if (y.lastbuffer)
+		rem = ft_strjoin_trim("", y.lastbuffer, 0);
+	return (free(y.lastbuffer), y.fullstring);
 }
 
 int	my_strn(char *s)
@@ -56,7 +44,7 @@ int	my_strn(char *s)
 
 	i = 0;
 	if (!s)
-		return (-1);
+		return (0);
 	while (s[i] != '\0')
 	{
 		if (s[i] == '\n')
@@ -66,61 +54,72 @@ int	my_strn(char *s)
 	return (0);
 }
 
-char	*buff_to_savebuff(char *remain_savedbuff, char **lastbuffer, int fd,
-		int *i)
+char	*read_add(char *rem, char **lastbuffer, int fd, char *fulls)
 {
-	tgnl_c	y;
-	char	*buffer;
+	t_gnl_c	y;
 
-	buffer = malloc((BUFFER_SIZE + 1) * (sizeof(char)));
-	if (!buffer)
+	y.buff = ft_calloc((BUFFER_SIZE + 1), (sizeof(char)));
+	if (!y.buff)
 		return (NULL);
-	y.i = -1;
-	while (y.i <= 0)
+	while (my_strn(y.buff) <= 0)
 	{
-		y.bytesread = read(fd, buffer, BUFFER_SIZE);
-		if (y.bytesread < 0 || ((y.bytesread == 0) && (y.i == -1)))
-			return (free(buffer), free(remain_savedbuff), NULL);
+		y.bytesread = read(fd, y.buff, BUFFER_SIZE);
 		if (y.bytesread == 0)
 		{
 			*lastbuffer = NULL;
-			*i = y.bytesread;
-			return (remain_savedbuff);
+			if (fulls && rem)
+				return (free(y.buff), fulls);
+			return (free(y.buff), NULL);
 		}
-		y.i = my_strn(buffer);
-		buffer[y.bytesread] = '\0';
-		remain_savedbuff = ft_strjoin_trim(remain_savedbuff, buffer, y.i);
-		if (!remain_savedbuff)
-			return (free(buffer), NULL);
+		y.buff[y.bytesread] = '\0';
+		y.i = my_strn(y.buff);
+		if (fulls[0] == '0')
+			fulls = ft_calloc(ft_strlen(y.buff) + ft_strlen(rem), sizeof(char));
+		fulls = buffjoin(fulls, y.buff, y.i, rem);
 	}
-	*lastbuffer = ft_strdup(buffer + y.i);
-	return (free(buffer), remain_savedbuff);
+	*lastbuffer = ft_strjoin_trim("", y.buff + y.i, 0);
+	return (free(y.buff), fulls);
 }
+
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned char	*temp_m;
 	size_t			k;
+	size_t			total;
 
-	k = nmemb * size;
-	temp_m = malloc(k);
-	if (temp_m == 0)
-	{
+	total = nmemb * size;
+	temp_m = malloc(total);
+	if (temp_m == NULL)
 		return (NULL);
+	k = 0;
+	while (k < total)
+	{
+		temp_m[k] = 0;
+		k++;
 	}
-	ft_memset(temp_m, 0, k);
 	return (temp_m);
 }
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t i;
-	unsigned char *p;
 
-	p = s;
-	i = 0;
-	while (i < n)
+char	*buffjoin(char *buff_fullstring, char *buffer, int i, char *rem)
+{
+	char	*temp;
+
+	if (rem)
 	{
-		p[i] = c;
-		i++;
+		if (i == 0)
+			i = ft_strlen(buffer);
+		temp = ft_strjoin_trim(rem, buffer, i);
+		return (free(buff_fullstring), temp);
 	}
-	return (p);
+	if (!buff_fullstring)
+	{
+		if (i == 0)
+			i = ft_strlen(buffer) + 1;
+		temp = ft_strjoin_trim("", buffer, i);
+	}
+	else
+		temp = ft_strjoin_trim(buff_fullstring, buffer, i);
+	if (!temp)
+		return (free(buff_fullstring), NULL);
+	return (free(buff_fullstring), temp);
 }
