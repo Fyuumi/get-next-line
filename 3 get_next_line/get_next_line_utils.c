@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:51:53 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/05 12:40:45 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:51:32 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,36 +24,13 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	p;
-	size_t	i;
-
-	p = ft_strlen(src);
-	if (size == 0)
-	{
-		return (p);
-	}
-	if (dst == NULL || src == NULL)
-	{
-		return (0);
-	}
-	i = 0;
-	while (src[i] != '\0' && i < size - 1)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (p);
-}
-
 // strjoin_trim is only joining the string till i character like strlcopy
 char	*ft_strjoin_trim(char *s1, char const *s2, int i)
 {
 	char	*string;
 	int		ls;
 	int		li;
+	int		j;
 
 	ls = ft_strlen(s1);
 	li = ft_strlen(s2);
@@ -66,6 +43,10 @@ char	*ft_strjoin_trim(char *s1, char const *s2, int i)
 		return (0);
 	if (ls > 0)
 		ft_strlcpy(string, s1, ls + 1);
+	j = 0;
+	while (s1[j] != '\0')
+		string[j] = s1[j++];
+	string[j] = '\0';
 	if (li > 0)
 		ft_strlcat(string, s2, ls + li);
 	string[ls + li] = '\0';

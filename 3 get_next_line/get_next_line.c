@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:51:38 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/05 13:36:43 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:47:59 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,8 @@ char	*buffjoin(char *buff_fullstring, char *buffer, int i, char *rem)
 		if (i == 0)
 			i = ft_strlen(buffer) + 1;
 		temp = ft_strjoin_trim("", buffer, i);
+		return (temp);
 	}
-	else
-		temp = ft_strjoin_trim(buff_fullstring, buffer, i);
-	if (!temp)
-		return (free(buff_fullstring), NULL);
+	temp = ft_strjoin_trim(buff_fullstring, buffer, i);
 	return (free(buff_fullstring), temp);
 }
