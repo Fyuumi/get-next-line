@@ -1,0 +1,5 @@
+*.out
+*.o
+gnl_test
+.vscode
+get_next_line.a
