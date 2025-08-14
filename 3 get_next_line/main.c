@@ -6,26 +6,34 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:45:42 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/05 13:39:23 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/14 18:37:42 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
 
-	fd = open("file.txt", O_RDONLY);
-	line = "hey";
+	if (argc != 2)
+	{
+		printf("Usage: ./get_next_line <filename>\n");
+		return (1);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		return (1);
+	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		line = get_next_line(fd);
-		printf("%s", line);
-		printf("%c", '\n');
+		printf("%s\n", line);
 		free(line);
+		line = get_next_line(fd);
 	}
+	if (line)
+		free(line);
 	close(fd);
 	return (0);
 }
