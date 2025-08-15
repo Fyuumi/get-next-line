@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:51:53 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/05 12:40:45 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/15 18:50:19 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,86 +24,66 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	my_stricpy(char *dst, const char *src, int size, int start)
 {
-	size_t	p;
-	size_t	i;
+	int	i;
+	int	p;
 
-	p = ft_strlen(src);
-	if (size == 0)
+	i = start;
+	p = 0;
+	while (src[p] != '\0' && i < (start + size))
 	{
-		return (p);
-	}
-	if (dst == NULL || src == NULL)
-	{
-		return (0);
-	}
-	i = 0;
-	while (src[i] != '\0' && i < size - 1)
-	{
-		dst[i] = src[i];
+		dst[i] = src[p];
 		i++;
+		p++;
 	}
 	dst[i] = '\0';
-	return (p);
+	return (i);
 }
-
-// strjoin_trim is only joining the string till i character like strlcopy
-char	*ft_strjoin_trim(char *s1, char const *s2, int i)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*string;
-	int		ls;
-	int		li;
+	unsigned char	*temp_m;
+	size_t			k;
+	size_t			total;
 
-	ls = ft_strlen(s1);
-	li = ft_strlen(s2);
-	if (i > 0)
-		li = i;
-	if (i == -1)
-		li += 1;
-	string = (char *)ft_calloc(ls + li + 1, sizeof(char));
-	if (!string)
-		return (0);
-	if (ls > 0)
-		ft_strlcpy(string, s1, ls + 1);
-	if (li > 0)
-		ft_strlcat(string, s2, ls + li);
-	string[ls + li] = '\0';
-	return (string);
-}
-
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	lens;
-	size_t	lend;
-
-	if (dst[0] == '\0')
-		lend = 0;
-	else
-		lend = ft_strlen(dst);
-	lens = ft_strlen(src);
-	i = 0;
-	if (size <= lend)
-		return (lens + size);
-	while (i < size - lend && src[i] != '\0')
+	total = nmemb * size;
+	temp_m = malloc(total);
+	if (temp_m == NULL)
+		return (NULL);
+	k = 0;
+	while (k < total)
 	{
-		dst[lend + i] = src[i];
+		temp_m[k] = 0;
+		k++;
+	}
+	return (temp_m);
+}
+int	my_strn(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i] != '\0')
+	{
+		if (s[i] == '\n')
+			return (i + 1);
 		i++;
 	}
-	dst[lend + i] = '\0';
-	return (lens + lend);
+	return (0);
 }
-
 char	*ft_strdup(const char *s)
 {
-	char	*string;
-	size_t	len_s;
+	char *string;
+	size_t len_s;
 
 	len_s = ft_strlen(s) + 1;
-	string = malloc(len_s * sizeof(char));
-	if (!string)
+	string = ft_calloc(len_s, sizeof(char));
+	if (string == 0)
+	{
 		return (NULL);
+	}
 	ft_strlcpy(string, s, len_s);
 	return (string);
 }
