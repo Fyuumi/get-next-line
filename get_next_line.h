@@ -6,7 +6,7 @@
 /*   By: opaulman <opaulman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:53:32 by opaulman          #+#    #+#             */
-/*   Updated: 2025/08/15 18:50:24 by opaulman         ###   ########.fr       */
+/*   Updated: 2025/08/15 20:40:05 by opaulman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
+#  define BUFFER_SIZE 42
 # endif
 
 typedef struct y
